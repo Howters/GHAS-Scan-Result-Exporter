@@ -1,0 +1,39 @@
+{
+    "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
+    "id": "b9e3e04b-108d-4cd1-8fd7-e211166d3d20",
+    "name": "extension-name",
+    "friendlyName": "extension-name",
+    "description": "Copy your code and make it a new repo",
+    "helpMarkDown": "",
+    "category": "Utility",
+    "author": "Hans",
+    "version": {
+      "Major": 0,
+      "Minor": 1,
+      "Patch": 0
+    },
+    "instanceNameFormat": "Copy Code",
+    "inputs": [
+      {
+        "name": "projectRepo",
+        "type": "string",
+        "label": "Project Repository",
+        "defaultValue": "",
+        "required": true,
+        "helpMarkDown": "Name of the Repository that will be checked. This will replace the existing repo if it exists, and create a new one if it does not. Best practice : Uses the same name as the Repository, for example: Repository name is SSG10.Binus.API, write the Repository name here."
+      },
+      {
+        "name": "recipientEmail",
+        "type": "string",
+        "label": "Recipient's Email (Seperated with ';' without space)",
+        "defaultValue": "",
+        "required": false,
+        "helpMarkDown": "The recipient(s)'s email that will receive the result of the scanning. Use ';' as the seperator between emails without any spaces"
+      }
+    ],
+    "execution": {
+      "Node10": {
+        "target": "index.js"
+      }
+    }
+  }  

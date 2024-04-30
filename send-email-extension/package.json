@@ -1,0 +1,24 @@
+{
+  "name": "send-email",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.4",
+    "azure-pipelines-task-lib": "^4.10.1",
+    "exceljs": "^4.4.0",
+    "fs": "^0.0.1-security",
+    "nodemailer": "^6.9.13",
+    "xlsx-populate": "^1.21.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.4",
+    "@types/q": "^1.5.8",
+    "typescript": "^5.4.4"
+  }
+}
