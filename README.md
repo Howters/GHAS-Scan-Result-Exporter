@@ -1,28 +1,29 @@
-# AzureDevOps-GHAS-Repo-Cloner
+# GHAS Scan Result Exporter
 
-This repository contains an Azure DevOps extension designed to streamline the process of cloning repositories across projects, setting up pipelines, and integrating GitHub Advanced Security (GHAS) for thorough code scanning.
+GHAS Scan Result Exporter is an Azure DevOps extension designed to streamline the retrieval and organization of GitHub Advanced Security (GHAS) scan results. Using Azure DevOps API, this extension fetches scan data and compiles it into an Excel file with three dedicated sheets: 'Code QL', 'Dependency Scanning', and 'Secret Scanning'. With seamless integration of ExcelJS, it empowers users to effortlessly generate detailed reports. Moreover, leveraging Nodemailer, it offers the functionality to send these reports as email attachments, facilitating efficient communication and collaboration within development teams. Simplify your security analysis workflow and enhance team productivity with GHAS Scan Result Exporter.
 
 ## Features
 
-- **Effortless Cloning:** Easily copy repositories between Azure DevOps projects.
-- **Automatic Pipeline Setup:** Automatically create and run pipelines for the cloned repositories.
-- **GHAS Integration:** Utilize GitHub Advanced Security for comprehensive code scanning within the cloned repositories.
+- **Retrieve GHAS Scan Results**: Utilize the Azure DevOps API to fetch detailed scan results from GitHub Advanced Security.
+- **Excel File Generation**: Automatically generate an Excel file with three sheets ('Code QL', 'Dependency Scanning', 'Secret Scanning') containing comprehensive scan result data.
+- **Email Attachment**: Seamlessly send the generated Excel file as an email attachment using Nodemailer, with the recipient address provided by the user.
 
 ## How it Works
 
-1. **Clone Repositories:** Select the source and destination projects, and effortlessly clone repositories.
-2. **Pipeline Automation:** The extension automatically sets up pipelines for the cloned repositories, ensuring seamless integration with your workflow.
-3. **GHAS Code Scanning:** Leverage GitHub Advanced Security to scan the cloned repositories for potential vulnerabilities and issues.
+1. **Retrieve Scan Results**: Access GHAS scan results through the Azure DevOps API.
+2. **Generate Excel File**: Utilize ExcelJS to create an Excel file with detailed scan result information categorized into three sheets.
+3. **Send Email**: Use Nodemailer to send the generated Excel file as an email attachment, with the recipient address specified by the user.
 
 ## Getting Started
 
 1. Install the Azure DevOps extension.
 2. Configure the extension with necessary permissions and settings.
-3. Start cloning repositories and enjoy automated pipeline setup with GHAS integration.
+3. Retrieve GHAS scan results and generate the Excel file with the provided script.
+4. Provide the recipient email address to send the Excel file via email.
 
 ## Contributors
 
-- Howters
+- Howters (https://github.com/howters)
 
 ## License
 
