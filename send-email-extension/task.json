@@ -1,39 +1,121 @@
 {
-    "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
-    "id": "b9e3e04b-108d-4cd1-8fd7-e211166d3d20",
-    "name": "extension-name",
-    "friendlyName": "extension-name",
-    "description": "Copy your code and make it a new repo",
-    "helpMarkDown": "",
-    "category": "Utility",
-    "author": "Hans",
-    "version": {
-      "Major": 0,
-      "Minor": 1,
-      "Patch": 0
+  "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
+  "id": "932b975d-f07c-4611-a983-cd3b5e47bc30",
+  "name": "HansSendEmail",
+  "friendlyName": "Hans-Send-Email",
+  "description": "Scan using Github Advanced Security and Send E-mail to designated recipients.",
+  "helpMarkDown": "Scan using Github Advanced Security and Send E-mail to designated recipients.",
+  "category": "Utility",
+  "author": "Hans",
+  "version": {
+    "Major": 1,
+    "Minor": 0,
+    "Patch": 3
+  },
+  "instanceNameFormat": "Hans-Send-Email",
+  "inputs": [
+    {
+      "name": "projectRepo",
+      "type": "string",
+      "label": "Project Repository",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Name of the Repository that will be checked. This will replace the existing repo if it exists, and create a new one if it does not. Best practice : Uses the same name as the Repository, for example: Repository name is SSG10.Binus.API, write the Repository name here.",
+      "validation": {
+        "expression": "isMatch(value, '^[a-zA-Z0-9-]+$', 'IgnoreCase,Multiline')",
+        "message": "Please enter a value containing only letters (a-z, A-Z), numbers (1-9), and the minus sign (-). Special characters and spaces are not allowed."
+    }    
     },
-    "instanceNameFormat": "Copy Code",
-    "inputs": [
-      {
-        "name": "projectRepo",
-        "type": "string",
-        "label": "Project Repository",
-        "defaultValue": "",
-        "required": true,
-        "helpMarkDown": "Name of the Repository that will be checked. This will replace the existing repo if it exists, and create a new one if it does not. Best practice : Uses the same name as the Repository, for example: Repository name is SSG10.Binus.API, write the Repository name here."
-      },
-      {
-        "name": "recipientEmail",
-        "type": "string",
-        "label": "Recipient's Email (Seperated with ';' without space)",
-        "defaultValue": "",
-        "required": false,
-        "helpMarkDown": "The recipient(s)'s email that will receive the result of the scanning. Use ';' as the seperator between emails without any spaces"
+    {
+      "name": "recipientEmail",
+      "type": "string",
+      "label": "Recipient's Email (Seperated with ';' without space)",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "The recipient(s)'s email that will receive the result of the scanning. Use ';' as the seperator between emails without any spaces"
+    },
+    {
+      "name": "projectRequester",
+      "type": "string",
+      "label": "Your Email",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Please input your name / email here"
+    },
+    {
+      "name": "projectOwner",
+      "type": "pickList",
+      "label": "Project Owner",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "The division of the Repository/Project's owner",
+      "options": {
+        "front-end": "Front-End",
+        "back-end": "Back-End",
+        "SSG 1 Cluster 1": "SSG 1 Cluster 1",
+        "SSG 1 Cluster 2": "SSG 1 Cluster 2",
+        "SSG 1 Cluster 3": "SSG 1 Cluster 3",
+        "SSG 1 Cluster 4": "SSG 1 Cluster 4",
+        "SSG 1 Cluster 5": "SSG 1 Cluster 5",
+        "SSG 2 Cluster 1": "SSG 2 Cluster 1",
+        "SSG 2 Cluster 2": "SSG 2 Cluster 2",
+        "SSG 2 Cluster 3": "SSG 2 Cluster 3",
+        "SSG 2 Cluster 4": "SSG 2 Cluster 4",
+        "SSG 2 Cluster 5": "SSG 2 Cluster 5",
+        "SSG 3 Cluster 1": "SSG 3 Cluster 1",
+        "SSG 3 Cluster 2": "SSG 3 Cluster 2",
+        "SSG 3 Cluster 3": "SSG 3 Cluster 3",
+        "SSG 3 Cluster 4": "SSG 3 Cluster 4",
+        "SSG 3 Cluster 5": "SSG 3 Cluster 5",
+        "SSG 4 Cluster 1": "SSG 4 Cluster 1",
+        "SSG 4 Cluster 2": "SSG 4 Cluster 2",
+        "SSG 4 Cluster 3": "SSG 4 Cluster 3",
+        "SSG 4 Cluster 4": "SSG 4 Cluster 4",
+        "SSG 4 Cluster 5": "SSG 4 Cluster 5",
+        "SSG 5 Cluster 1": "SSG 5 Cluster 1",
+        "SSG 5 Cluster 2": "SSG 5 Cluster 2",
+        "SSG 5 Cluster 3": "SSG 5 Cluster 3",
+        "SSG 5 Cluster 4": "SSG 5 Cluster 4",
+        "SSG 5 Cluster 5": "SSG 5 Cluster 5",
+        "SSG 6 Cluster 1": "SSG 6 Cluster 1",
+        "SSG 6 Cluster 2": "SSG 6 Cluster 2",
+        "SSG 6 Cluster 3": "SSG 6 Cluster 3",
+        "SSG 6 Cluster 4": "SSG 6 Cluster 4",
+        "SSG 6 Cluster 5": "SSG 6 Cluster 5",
+        "SSG 7 Cluster 1": "SSG 7 Cluster 1",
+        "SSG 7 Cluster 2": "SSG 7 Cluster 2",
+        "SSG 7 Cluster 3": "SSG 7 Cluster 3",
+        "SSG 7 Cluster 4": "SSG 7 Cluster 4",
+        "SSG 7 Cluster 5": "SSG 7 Cluster 5",
+        "SSG 8 Cluster 1": "SSG 8 Cluster 1",
+        "SSG 8 Cluster 2": "SSG 8 Cluster 2",
+        "SSG 8 Cluster 3": "SSG 8 Cluster 3",
+        "SSG 8 Cluster 4": "SSG 8 Cluster 4",
+        "SSG 8 Cluster 5": "SSG 8 Cluster 5",
+        "SSG 9 Cluster 1": "SSG 9 Cluster 1",
+        "SSG 9 Cluster 2": "SSG 9 Cluster 2",
+        "SSG 9 Cluster 3": "SSG 9 Cluster 3",
+        "SSG 9 Cluster 4": "SSG 9 Cluster 4",
+        "SSG 9 Cluster 5": "SSG 9 Cluster 5",
+        "SSG 10 Cluster 1": "SSG 10 Cluster 1",
+        "SSG 10 Cluster 2": "SSG 10 Cluster 2",
+        "SSG 10 Cluster 3": "SSG 10 Cluster 3",
+        "SSG 10 Cluster 4": "SSG 10 Cluster 4",
+        "SSG 10 Cluster 5": "SSG 10 Cluster 5"
       }
-    ],
-    "execution": {
-      "Node10": {
-        "target": "index.js"
-      }
+    },
+    {
+      "name": "isProd",
+      "type": "boolean",
+      "label": "Is this for Production",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "Check if this repo / code is published for production"
     }
-  }  
+  ],
+  "execution": {
+    "Node10": {
+      "target": "index.js"
+    }
+  }
+}  

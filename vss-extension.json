@@ -1,8 +1,8 @@
 {
     "manifestVersion": 1,
-    "id": "Hans-Xtension",
-    "name": "Hans-Xtension",
-    "version": "0.0.1",
+    "id": "Hans-SendEmail",
+    "name": "Hans-SendEmail",
+    "version": "1.0.3",
     "publisher": "HansKhomulia",
     "targets": [
         {

@@ -21,14 +21,21 @@ const fs = require('fs');
 async function run() {
 
         try {
-            const projectRepo = tl.getInput("projectRepo", true);
-            const recipientEmail = tl.getInput("recipientEmail", true);
+            // const projectRepo = tl.getInput("projectRepo", true);
+            const recipientEmail = tl.getInput("recipientEmail", false);
+            const projectOwner = tl.getInput("projectOwner", true)
+            const projectRequester = tl.getInput("projectRequester", true)
+            const isProd = tl.getInput("isProd", true);
             const emailsArray = recipientEmail.split(';').map(email => email.trim());
+            if(isProd === 'false'){
+                console.log('This Repository is NOT for Production');
+                return;
+            }
+            // const recipientEmail = ""
             //Add cyber's email to the recipient email array
             emailsArray.push("{{Cyber email}}")
-
             var execProcess = require("./exec_process.js");
-            var cred = 
+            var cred =
             "{{Username}}:{{PAT}}"
             var conversion = Buffer.from(cred).toString("base64");
             // var body = {
@@ -93,9 +100,9 @@ async function run() {
                     const dependencyScanningWorksheet = workbook.addWorksheet('Dependency Scanning');
                     const secretsScanningWorksheet = workbook.addWorksheet('Secrets Scanning');
                   
-                    const dependencyScanningHeaders = ['NO.', 'Alert ID', 'Severity', 'Title', 'Opaque ID', 'Friendly Name', 'Description', 'Resources', 'Help Message', 'CVE ID', 'Repository URL', 'First Seen Date', 'Last Seen Date', 'Introduced Date', 'State', 'Item URL', 'Alert Link'];
+                    const dependencyScanningHeaders = ['NO.', 'Alert ID', 'Severity', 'Title', 'Opaque ID', 'Friendly Name', 'Description', 'Recommendation', 'Resources', 'Help Message', 'CVE ID', 'Repository URL', 'First Seen Date', 'Last Seen Date', 'Introduced Date', 'State', 'Item URL', 'Alert Link'];
     
-                    const codeQLHeaders = ['NO.', 'Alert ID', 'Severity', 'Title', 'Opaque ID', 'Friendly Name', 'Description', 'Resources', 'Help Message', 'Repository URL', 'First Seen Date', 'Last Seen Date', 'Introduced Date', 'State', 'Item URL', 'Alert Link'];
+                    const codeQLHeaders = ['NO.', 'Alert ID', 'Severity', 'Title', 'Opaque ID', 'Friendly Name', 'Description', 'Recommendations', 'Resources', 'Help Message', 'Repository URL', 'First Seen Date', 'Last Seen Date', 'Introduced Date', 'State', 'Item URL', 'Alert Link'];
                     
                     const secretHeaders = ['NO.', 'Alert ID', 'Severity', 'Title', 'Opaque ID', 'Friendly Name', 'Description', 'Help Message', 'Repository URL', 'First Seen Date', 'Last Seen Date', 'Introduced Date', 'State', 'Item URL', 'Truncated Secret', 'Confidence', 'Alert Link'];
                     
@@ -122,16 +129,38 @@ async function run() {
                     setWorksheetHeadersAndWidths(secretsScanningWorksheet, secretHeaders);
     
                     // Populate worksheets with data
-                    function populateWorksheet(alerts, worksheet, headers) {
+                    function populateWorksheet(alerts, worksheet, headers) {    
                         alerts.forEach((alert, index) => {
                             const { alertId, severity, title, tools, repositoryUrl, firstSeenDate, lastSeenDate, introducedDate, state, truncatedSecret, confidence, physicalLocations } = alert;
                             const tool = tools[0];
                             const description = tool.rules[0].description;
-                            const alertLink = `https://dev.azure.com/{{Org}}/{{Project}}/_git/${projectRepo}/alerts/${alertId}?branch=refs%2Fheads%2Fmaster`
-                            const filepath = physicalLocations.length > 0 ? physicalLocations[0].filePath : '';
-                    
+                            const { helpMessage } = tools[0].rules[0];
+                            const alertLink = `https://dev.azure.com/{{Org}}/{{Project}}/_git/${projectRepo}/alerts/${alertId}?branch=refs%2Fheads%2Fmaster`;
+                            const recommendationIndex = description.indexOf("Recommendation:");
+                            if(recommendationIndex !==-1 ){
+                                var recommendationText = description.substring(recommendationIndex + "Recommendation:".length).trim();
+                            }
+                            else{
+                                var recommendationText =""
+                            }
+                            const recommendationsIndex = helpMessage.indexOf("## Recommendation") + "## Recommendation".length;
+                            const exampleIndex = helpMessage.indexOf("## Example");
+                            const referencesIndex = helpMessage.indexOf("## References");
+                            var recommendationsText;
+                            if (recommendationsIndex !== -1) {
+                                if (exampleIndex !== -1) {
+                                    recommendationsText = helpMessage.substring(recommendationsIndex, exampleIndex).trim();
+                                } else if (referencesIndex !== -1) {
+                                    recommendationText = helpMessage.substring(recommendationsIndex, referencesIndex).trim();
+                                } else {
+                                    recommendationsText = helpMessage.substring(recommendationsIndex).trim();
+                                }
+                            }
+                            else{
+                                recommendationsText = ""
+                            }
                             // Create a new row array to hold the data
-                            const rowData = [];
+                            const rowData = []; 
                     
                             // Iterate through each header and populate the row data
                             headers.forEach(header => {
@@ -158,11 +187,17 @@ async function run() {
                                     case 'Description':
                                         rowData.push(description);
                                         break;
+                                    case 'Recommendation':
+                                        rowData.push(recommendationText);
+                                        break;
+                                    case 'Recommendations':
+                                        rowData.push(recommendationsText);
+                                        break;
                                     case 'Resources':
                                         rowData.push(tool.rules[0].resources || '');
                                         break;
                                     case 'Help Message':
-                                        rowData.push(tool.rules[0].helpMessage || '');
+                                        rowData.push(helpMessage || '');
                                         break;
                                     case 'CVE ID':
                                         if (tool.name === 'Advanced Security Dependency Scanning' && tool.rules[0].additionalProperties) {
@@ -212,7 +247,6 @@ async function run() {
                     
                   
                     populateWorksheet(codeQLAlerts, codeQLWorksheet, codeQLHeaders);
-                    
                     populateWorksheet(dependencyScanningAlerts, dependencyScanningWorksheet, dependencyScanningHeaders);
                     populateWorksheet(secretsScanningAlerts, secretsScanningWorksheet, secretHeaders);
                     // Save workbook to a file
@@ -226,7 +260,6 @@ async function run() {
                     const filePath = `vulnerabilities_${projectRepo}_${formattedDate}_${formattedTime}.xlsx`
 
                     workbook.xlsx.writeFile(filePath).then(function() {
-    
                       console.log('Excel file generated successfully.');
                       const transporter = nodemailer.createTransport({
                         service: "Outlook365",
@@ -239,11 +272,12 @@ async function run() {
                         },
                       });
                     // Create email message
+                    // return;
                     const mailOptions = {
                         from: '{{sender-email}}',
                         to: emailsArray,
                         subject: `Scanning Result of GHAS Project ${projectRepo} at ${formattedDate}_${formattedTime}`,
-                        text: `There are ${codeQLCounts} vulnerabilities found on Code Scanning, ${dependencyCounts} vulnerabilities found on Dependency Scanning, and ${secretCounts} vulnerabilities found on Secret Scanning`,
+                        text: `${projectOwner}\n There are ${codeQLCounts} vulnerabilities found on Code Scanning, ${dependencyCounts} vulnerabilities found on Dependency Scanning, and ${secretCounts} vulnerabilities found on Secret Scanning`,
                         attachments: [
                         {
                             filename: filePath,
