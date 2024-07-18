@@ -246,7 +246,7 @@ ${formattedSecretSeverityCounts}`;
 const run = () => {
     if (isProd === 'false') {
         console.log('This Repository is NOT for Production');
-        return;
+        return
     }
 
     fetchAlerts(projectRepo).then(response => {
