@@ -10,14 +10,14 @@
   "version": {
     "Major": 1,
     "Minor": 0,
-    "Patch": 3
+    "Patch": 5
   },
   "instanceNameFormat": "Hans-Send-Email",
   "inputs": [
     {
       "name": "projectRepo",
       "type": "string",
-      "label": "Project Repository",
+      "label": "Project Repository-5",
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "Name of the Repository that will be checked. This will replace the existing repo if it exists, and create a new one if it does not. Best practice : Uses the same name as the Repository, for example: Repository name is SSG10.Binus.API, write the Repository name here.",

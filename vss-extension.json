@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "Hans-SendEmail",
     "name": "Hans-SendEmail",
-    "version": "1.0.3",
+    "version": "1.0.5",
     "publisher": "HansKhomulia",
     "targets": [
         {
